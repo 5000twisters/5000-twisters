@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <script src="{{ '/assets/js/script.js' | relative_url }}"></script>
+</head>
+<body>
+  <header>
+    <h1>Welcome to 5000 Twisters!</h1>
+    <p>Join us as we attempt to break the world record for the most people playing Twister at the same time!</p>
+  </header>
+
+  <div class="container">
+    {{ content }}
+  </div>
+
+  <footer>
+    <p>Thank you for registering!</p>
+  </footer>
+</body>
+</html>
