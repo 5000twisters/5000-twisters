@@ -1,0 +1,7 @@
+theme: minima
+plugins:
+  - jekyll-feed
+
+title: 5000 Twisters
+description: Join us to break the world record with 5000 people playing Twister!
+url: https://5000twisters.github.io/5000-twisters-website
