@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Form</title>
+  <script src="https://cdn.jsdelivr.net/npm/mongodb@4.1.1/lib/index.min.js"></script>
+</head>
+<body>
+  <h1>Event Form</h1>
+
+  <form id="event-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+
+    <label for="contact-preference">Contact Preference:</label>
+    <select id="contact-preference">
+      <option value="email">Email</option>
+      <option value="phone">Phone</option>
+    </select>
+
+    <label id="email-label" for="email">Email:</label>
+    <input type="email" id="email">
+
+    <label id="phone-label" for="phone">Phone:</label>
+    <input type="tel" id="phone">
+
+    <label for="commitment">Are you in?</label>
+    <select id="commitment">
+      <option value="I'm in!">I'm in!</option>
+      <option value="I'll try">I'll try</option>
+      <option value="Maybe...">Maybe...</option>
+      <option value="Nah, but I'll spread the word">Nah, but I'll spread the word</option>
+      <option value="I want nothing to do with this">I want nothing to do with this</option>
+    </select>
+
+    <label for="update-preferences">Update Preferences:</label>
+    <input type="checkbox" id="goal-update" value="Tell me when you reach your goal">
+    <label for="goal-update">Tell me when you reach your goal</label><br>
+    <input type="checkbox" id="progress-update" value="Send me occasional progress updates">
+    <label for="progress-update">Send me occasional progress updates</label><br>
+    <input type="checkbox" id="no-contact" value="Never contact me">
+    <label for="no-contact">Never contact me</label><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script>
+    const form = document.getElementById('event-form');
+    const emailLabel = document.getElementById('email-label');
+    const emailInput = document.getElementById('email');
+    const phoneLabel = document.getElementById('phone-label');
+    const phoneInput = document.getElementById('phone');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      if (validateForm()) {
+        const name = document.getElementById('name').value;
+        const contact = document.getElementById('contact-preference').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const commitment = document.getElementById('commitment').value;
+        const goalUpdate = document.getElementById('goal-update').checked;
+        const progressUpdate = document.getElementById('progress-update').checked;
+        const noContact = document.getElementById('no-contact').checked;
+      
+        // Set up MongoDB connection
+        const MongoClient = mongodb.MongoClient;
+        const uri = 'mongodb+srv://5000twister:<M3ga0rangemongo>@atlascluster.bzlpbls.mongodb.net/?retryWrites=true&w=majority';
+        const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+        // Get a reference to the MongoDB collection
+        let collection;
+
+        client.connect(function(err) {
+          if (err) {
+            console.error('Error connecting to MongoDB: ', err);
+            return;
+          }
+
+          const db = client.db('5000 Twisters Site');
+          collection = db.collection('submissions');
+          console.log('Connected to MongoDB');
+
+          collection.insertOne({
+            name: name,
+            contact: contact,
+            email: email,
+            phone: phone,
+            commitment: commitment,
+            goalUpdate: goalUpdate,
+            progressUpdate: progressUpdate,
+            noContact: noContact,
+            timestamp: new Date()
+          }, function(err, result) {
+            if (err) {
+              console.error('Error adding document: ', err);
+              return;
+            }
+
+            form.reset();
+            showMessage('Thank you for your submission!');
+          });
+        });
+      }
+    });
+
+    function validateForm() {
+      // Validation logic goes here
+      return true;
+    }
+
+    function showMessage(message) {
+      const messageContainer = document.getElementById('message');
+      messageContainer.textContent = message;
+    }
+
+    // Show/hide email and phone fields based on contact preference selection
+    document.getElementById('contact-preference').addEventListener('change', function() {
+      if (this.value === 'email') {
+        emailLabel.style.display = 'block';
+        emailInput.style.display = 'block';
+
+        phoneLabel.style.display = 'none';
+        phoneInput.style.display = 'none';
+      } else if (this.value === 'phone') {
+        emailLabel.style.display = 'none';
+        emailInput.style.display = 'none';
+
+        phoneLabel.style.display = 'block';
+        phoneInput.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

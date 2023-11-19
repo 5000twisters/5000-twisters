@@ -1,8 +1,0 @@
-theme: minima
-plugins:
-  - jekyll-feed
-permalink: /:title/
-
-title: 5000 Twisters
-description: Join us to break the world record with 5000 people playing Twister!
-baseurl: "/5000-twisters-website"
